@@ -1,4 +1,4 @@
-package com.htetarkarzaw.twitterlite.ui.dashboard
+package com.htetarkarzaw.twitterlite.ui.screen.setting
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

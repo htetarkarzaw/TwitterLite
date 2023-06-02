@@ -1,4 +1,4 @@
-package com.htetarkarzaw.twitterlite.ui.feed
+package com.htetarkarzaw.twitterlite.ui.screen.feed
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
