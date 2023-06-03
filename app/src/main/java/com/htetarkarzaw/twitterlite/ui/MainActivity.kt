@@ -1,4 +1,4 @@
-package com.htetarkarzaw.twitterlite
+package com.htetarkarzaw.twitterlite.ui
 
 import android.util.Log
 import android.view.View
@@ -6,9 +6,12 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.htetarkarzaw.twitterlite.R
 import com.htetarkarzaw.twitterlite.databinding.ActivityMainBinding
 import com.htetarkarzaw.twitterlite.ui.base.BaseActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
 
     private lateinit var navController: NavController

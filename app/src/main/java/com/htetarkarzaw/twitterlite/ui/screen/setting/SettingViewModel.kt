@@ -1,13 +1,23 @@
 package com.htetarkarzaw.twitterlite.ui.screen.setting
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.firebase.auth.FirebaseUser
+import com.htetarkarzaw.twitterlite.domain.usecase.getFirebaseCurrentUserUsecase
+import com.htetarkarzaw.twitterlite.domain.usecase.logoutUsecase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class SettingViewModel : ViewModel() {
+@HiltViewModel
+class SettingViewModel @Inject constructor(
+    private val logoutUsecase: logoutUsecase,
+    private val getCurrentUserUsecase: getFirebaseCurrentUserUsecase
+) : ViewModel() {
+    val currentUser: FirebaseUser?
+        get() = getCurrentUserUsecase()
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is dashboard Fragment"
+    fun logout() {
+        if (currentUser != null) {
+            logoutUsecase()
+        }
     }
-    val text: LiveData<String> = _text
 }

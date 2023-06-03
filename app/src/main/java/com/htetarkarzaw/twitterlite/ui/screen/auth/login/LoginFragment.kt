@@ -1,35 +1,53 @@
 package com.htetarkarzaw.twitterlite.ui.screen.auth.login
 
 import android.widget.Toast
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.htetarkarzaw.twitterlite.R
+import com.htetarkarzaw.twitterlite.data.Resource
 import com.htetarkarzaw.twitterlite.databinding.FragmentLoginBinding
 import com.htetarkarzaw.twitterlite.ui.base.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
-    private lateinit var auth: FirebaseAuth
+    private val viewModel : LoginViewModel by viewModels()
 
     override fun observe() {
+        lifecycleScope.launch {
+            viewModel.loginFlow.collectLatest {
+                hideLoadingDialog()
+                when(it){
+                    is Resource.Error -> {
+                        Toast.makeText(requireContext(), "Login Fail! $it", Toast.LENGTH_LONG).show()
+                    }
+                    is Resource.Loading -> {
+                        showLoadingDialog("Logging in...")
+                    }
+                    is Resource.Nothing -> {}
+                    is Resource.Success -> {
+                        val currentUser = it.data
+                        Toast.makeText(requireContext(), "Login Success! ${currentUser?.displayName}", Toast.LENGTH_LONG)
+                            .show()
+                        findNavController().navigate(R.id.action_loginFragment_to_feedFragment)
+                    }
+                }
+            }
+        }
     }
 
     override fun initUi() {
-        auth = Firebase.auth
         binding.btnLogin.setOnClickListener {
             val email = binding.etEmail.text.toString()
             val password = binding.etPassword.text.toString()
-            auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
-                if (it.isSuccessful) {
-                    val currentUser = auth.currentUser
-                    Toast.makeText(requireContext(), "Login Success! ${currentUser?.displayName}", Toast.LENGTH_LONG)
-                        .show()
-                    findNavController().navigate(R.id.action_loginFragment_to_feedFragment)
-                } else {
-                    Toast.makeText(requireContext(), "Login Fail! ${it.exception?.message}", Toast.LENGTH_LONG).show()
-                }
-            }
+            hideSoftKeyboard()
+            viewModel.loginWithEmailAndPassword(email,password)
         }
 
         binding.tvRegister.setOnClickListener {
