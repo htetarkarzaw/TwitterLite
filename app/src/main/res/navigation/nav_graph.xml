@@ -98,11 +98,13 @@
         android:name="com.htetarkarzaw.twitterlite.ui.screen.setting.editprofile.ImageChooserBsFragment"
         android:label="ImageChooserBsFragment"
         tools:layout="@layout/fragment_bs_image_chooser" />
+
     <fragment
         android:id="@+id/uploadFeedFragment"
         android:name="com.htetarkarzaw.twitterlite.ui.screen.upload_feed.UploadFeedFragment"
         android:label="UploadFeedFragment"
         tools:layout="@layout/fragment_upload_feed" />
+
     <fragment
         android:id="@+id/feedDetailFragment"
         android:name="com.htetarkarzaw.twitterlite.ui.screen.feed.FeedDetailFragment"

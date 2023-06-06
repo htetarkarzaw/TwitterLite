@@ -1,6 +1,5 @@
 package com.htetarkarzaw.twitterlite.ui
 
-import android.util.Log
 import android.view.View
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -29,6 +28,16 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     override fun initUi() {
         setUpNavigation()
+        binding.fab.setOnClickListener {
+            when(navController.currentDestination?.id){
+                R.id.feedFragment->{
+                    navController.navigate(R.id.action_feedFragment_to_uploadFeedFragment)
+                }
+                R.id.settingFragment->{
+                    navController.navigate(R.id.action_settingFragment_to_uploadFeedFragment)
+                }
+            }
+        }
     }
 
     override fun observe() {

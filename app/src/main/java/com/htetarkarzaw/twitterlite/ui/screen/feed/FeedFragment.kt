@@ -5,8 +5,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.htetarkarzaw.twitterlite.R
 import com.htetarkarzaw.twitterlite.data.Resource
 import com.htetarkarzaw.twitterlite.databinding.FragmentFeedBinding
 import com.htetarkarzaw.twitterlite.ui.base.BaseFragment
@@ -68,10 +66,6 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(FragmentFeedBinding::infl
         feedAdapter.apply {
             binding.rvFeed.layoutManager = LinearLayoutManager(requireContext())
             binding.rvFeed.adapter = this
-        }
-        val fabButton = requireActivity().findViewById<FloatingActionButton>(R.id.fab)
-        fabButton.setOnClickListener {
-            findNavController().navigate(R.id.action_feedFragment_to_uploadFeedFragment)
         }
         binding.swipeRefresh.setOnRefreshListener {
             viewModel.getFeeds()
