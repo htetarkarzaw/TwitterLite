@@ -4,20 +4,25 @@ import android.Manifest
 import android.net.Uri
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.fragment.app.viewModels
+import androidx.core.content.FileProvider
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseUser
+import com.htetarkarzaw.twitterlite.R
 import com.htetarkarzaw.twitterlite.data.Resource
 import com.htetarkarzaw.twitterlite.databinding.FragmentEditProfileBinding
 import com.htetarkarzaw.twitterlite.ui.base.BaseFragment
+import com.htetarkarzaw.twitterlite.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.io.File
 
 @AndroidEntryPoint
 class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>(FragmentEditProfileBinding::inflate) {
-    private val viewModel: EditProfileViewModel by viewModels()
+    private val viewModel: EditProfileViewModel by activityViewModels()
     private var photoUri: Uri? = null
     override fun observe() {
         lifecycleScope.launch {
@@ -43,15 +48,32 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>(FragmentEdi
                 }
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.chooser.collectLatest {
+                when (it) {
+                    Constants.TAKE_GALLERY -> {
+                        permissionTakeImageFromGallery.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    }
+
+                    Constants.TAKE_PHOTO -> {
+                        permissionTakePhoto.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    }
+                }
+            }
+        }
     }
 
     override fun initUi() {
         viewModel.currentUser?.let { bindProfile(it) }
         binding.ivProfile.setOnClickListener {
-            permissionTakeImageFromGallery.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            findNavController().navigate(R.id.action_editProfileFragment_to_imageChooserBsFragment)
         }
         binding.btnSave.setOnClickListener {
             updateProfile()
+        }
+        binding.ivBack.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 
@@ -59,6 +81,7 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>(FragmentEdi
         Glide.with(requireContext()).load(user.photoUrl).into(binding.ivProfile)
         binding.etDisplayName.setText(user.displayName ?: "")
         binding.etEmail.setText(user.email ?: "")
+        photoUri = null
     }
 
     private fun updateProfile() {
@@ -74,10 +97,49 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>(FragmentEdi
             }
         }
 
+    private val permissionTakePhoto =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            if (it) {
+                takeImageFromCameraProfile()
+            }
+        }
+
     private fun takeImageFromGalleryProfile() {
         viewLifecycleOwner.lifecycleScope.launch {
             fromGalleryProfile.launch("image/*")
         }
+    }
+
+    private val fromCameraProfile = registerForActivityResult(
+        ActivityResultContracts.TakePicture()
+    ) {
+        if (it) {
+            Glide.with(requireContext()).load(photoUri).into(binding.ivProfile)
+        }
+
+    }
+
+    private fun takeImageFromCameraProfile() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            getTmpFileUri().let {
+                photoUri = it
+                fromCameraProfile.launch(photoUri)
+            }
+        }
+    }
+
+    private fun getTmpFileUri(): Uri {
+        val tmpFile =
+            File.createTempFile("just_temp_file_for_profile", ".png", requireActivity().cacheDir).apply {
+                createNewFile()
+                deleteOnExit()
+            }
+
+        return FileProvider.getUriForFile(
+            requireActivity(),
+            "com.htetarkarzaw.twitterlite.provider",
+            tmpFile
+        )
     }
 
     private val fromGalleryProfile = registerForActivityResult(

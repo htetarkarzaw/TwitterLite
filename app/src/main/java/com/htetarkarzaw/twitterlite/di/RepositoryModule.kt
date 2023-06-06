@@ -6,6 +6,8 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.htetarkarzaw.twitterlite.domain.repository.AuthRepository
 import com.htetarkarzaw.twitterlite.domain.repository.AuthRepositoryImpl
+import com.htetarkarzaw.twitterlite.domain.repository.FeedRepository
+import com.htetarkarzaw.twitterlite.domain.repository.FeedRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,13 +15,10 @@ import dagger.hilt.components.SingletonComponent
 
 @InstallIn(SingletonComponent::class)
 @Module
-object FirebaseModule {
+object RepositoryModule {
     @Provides
-    fun provideFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
+    fun providesAuthRepository(repo: AuthRepositoryImpl): AuthRepository = repo
 
     @Provides
-    fun provideFirebaseStorageReference(): StorageReference = FirebaseStorage.getInstance().reference
-
-    @Provides
-    fun providesFirebaseFireStore(): FirebaseFirestore = FirebaseFirestore.getInstance()
+    fun providesFeedRepository(repo: FeedRepositoryImpl): FeedRepository = repo
 }

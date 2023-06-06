@@ -50,14 +50,19 @@ class AuthRepositoryImpl @Inject constructor(
         try {
             if (currentUser != null) {
                 currentUser!!.updateEmail(email).await()
+                val profileUpdates: UserProfileChangeRequest
                 if(profileUrl!=null){
                     val fileRef = storageRef.child("user/${currentUser!!.uid}/profile.jpg")
                     fileRef.putFile(profileUrl).await()
                     profileUrl = fileRef.downloadUrl.await()
-                }
-                val profileUpdates = userProfileChangeRequest {
-                    displayName = name
-                    photoUri = profileUrl
+                    profileUpdates = userProfileChangeRequest {
+                        displayName = name
+                        photoUri = profileUrl
+                    }
+                }else{
+                    profileUpdates = userProfileChangeRequest {
+                        displayName = name
+                    }
                 }
                 currentUser!!.updateProfile(profileUpdates).await()
                 emit(Resource.Success(currentUser!!))

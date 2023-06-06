@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
-import com.htetarkarzaw.twitterlite.InflateFragment
+import com.htetarkarzaw.twitterlite.utils.InflateFragment
 import com.htetarkarzaw.twitterlite.ui.component.LoadingDialog
 
 

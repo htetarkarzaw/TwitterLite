@@ -9,7 +9,9 @@ import com.htetarkarzaw.twitterlite.domain.usecase.getFirebaseCurrentUserUsecase
 import com.htetarkarzaw.twitterlite.domain.usecase.logoutUsecase
 import com.htetarkarzaw.twitterlite.domain.usecase.updateUserUsecase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -24,6 +26,9 @@ class EditProfileViewModel @Inject constructor(
     val currentUser: FirebaseUser?
         get() = getCurrentUserUsecase()
 
+    private val _chooser = MutableSharedFlow<String>()
+    val chooser: SharedFlow<String> = _chooser
+
     private val _updateFlow = MutableStateFlow<Resource<FirebaseUser>>(Resource.Nothing())
     val updateFlow: StateFlow<Resource<FirebaseUser>> = _updateFlow
 
@@ -33,6 +38,12 @@ class EditProfileViewModel @Inject constructor(
             updateUserUsecase(name, email, uri).collectLatest {
                 _updateFlow.value = it
             }
+        }
+    }
+
+    fun updateChooser(chooser: String){
+        viewModelScope.launch {
+            _chooser.emit(chooser)
         }
     }
 }

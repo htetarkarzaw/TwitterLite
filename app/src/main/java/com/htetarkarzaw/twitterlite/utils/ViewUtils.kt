@@ -1,4 +1,4 @@
-package com.htetarkarzaw.twitterlite
+package com.htetarkarzaw.twitterlite.utils
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

@@ -10,6 +10,7 @@ import com.htetarkarzaw.twitterlite.R
 import com.htetarkarzaw.twitterlite.databinding.ActivityMainBinding
 import com.htetarkarzaw.twitterlite.ui.base.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
@@ -23,7 +24,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
             else -> shouldShowBottomNavigation(false)
         }
-        Log.e("Navigation---->", "Controller->$controller/Destination->$destination/Argument->$arguments")
+        Timber.tag("hakz.navigation").d("Controller->$controller/Destination->$destination/Argument->$arguments",)
     }
 
     override fun initUi() {

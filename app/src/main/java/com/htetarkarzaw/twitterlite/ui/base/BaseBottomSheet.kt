@@ -12,7 +12,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.htetarkarzaw.twitterlite.InflateSheet
+import com.htetarkarzaw.twitterlite.utils.InflateSheet
 import com.htetarkarzaw.twitterlite.R
 
 abstract class BaseBottomSheet<VB : ViewBinding>(

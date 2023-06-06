@@ -12,21 +12,30 @@
     tools:context=".ui.screen.setting.SettingFragment">
 
     <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivBack"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/ivProfile"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:background="@drawable/img_profile_place_holder"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivBack"
         app:shapeAppearanceOverlay="@style/circleImageView" />
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="edit"
         android:paddingBottom="8dp"
+        android:text="edit"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@id/ivProfile"

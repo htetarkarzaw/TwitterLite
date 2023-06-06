@@ -10,7 +10,11 @@
         android:id="@+id/feedFragment"
         android:name="com.htetarkarzaw.twitterlite.ui.screen.feed.FeedFragment"
         android:label="@string/title_feed"
-        tools:layout="@layout/fragment_feed" />
+        tools:layout="@layout/fragment_feed">
+        <action
+            android:id="@+id/action_feedFragment_to_uploadFeedFragment"
+            app:destination="@id/uploadFeedFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/settingFragment"
@@ -25,6 +29,9 @@
         <action
             android:id="@+id/action_settingFragment_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_uploadFeedFragment"
+            app:destination="@id/uploadFeedFragment" />
     </fragment>
 
     <fragment
@@ -74,6 +81,20 @@
         android:id="@+id/editProfileFragment"
         android:name="com.htetarkarzaw.twitterlite.ui.screen.setting.editprofile.EditProfileFragment"
         android:label="EditProfileFragment"
-        tools:layout="@layout/fragment_edit_profile" />
+        tools:layout="@layout/fragment_edit_profile">
+        <action
+            android:id="@+id/action_editProfileFragment_to_imageChooserBsFragment"
+            app:destination="@id/imageChooserBsFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/imageChooserBsFragment"
+        android:name="com.htetarkarzaw.twitterlite.ui.screen.setting.editprofile.ImageChooserBsFragment"
+        android:label="ImageChooserBsFragment"
+        tools:layout="@layout/fragment_bs_image_chooser" />
+    <fragment
+        android:id="@+id/uploadFeedFragment"
+        android:name="com.htetarkarzaw.twitterlite.ui.screen.upload_feed.UploadFeedFragment"
+        android:label="UploadFeedFragment"
+        tools:layout="@layout/fragment_upload_feed" />
 
 </navigation>
