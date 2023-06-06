@@ -2,6 +2,7 @@ package com.htetarkarzaw.twitterlite.ui.screen.upload_feed
 
 import android.Manifest
 import android.net.Uri
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.fragment.app.viewModels
@@ -10,7 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.htetarkarzaw.twitterlite.data.Resource
 import com.htetarkarzaw.twitterlite.databinding.FragmentUploadFeedBinding
-import com.htetarkarzaw.twitterlite.domain.criteria.FeedCriteria
+import com.htetarkarzaw.twitterlite.data.firebase.criteria.FeedCriteria
 import com.htetarkarzaw.twitterlite.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -38,14 +39,22 @@ class UploadFeedFragment : BaseFragment<FragmentUploadFeedBinding>(FragmentUploa
         }
 
     override fun observe() {
+        if (viewModel.currentUser != null) {
+            binding.tvName.text = viewModel.currentUser!!.displayName
+            viewModel.currentUser?.photoUrl.let {
+                Glide.with(requireContext()).load(it).into(binding.ivProfile)
+            }
+        }
         lifecycleScope.launch {
             viewModel.addFeed.collectLatest {
+                hideLoadingDialog()
                 when (it) {
                     is Resource.Error -> {
                         Timber.tag("hakz.feedviewmodel").d(it.message)
                     }
 
                     is Resource.Loading -> {
+                        showLoadingDialog("Uploading tweet....")
                         Timber.tag("hakz.feedviewmodel").d("Loading")
                     }
 
@@ -56,6 +65,27 @@ class UploadFeedFragment : BaseFragment<FragmentUploadFeedBinding>(FragmentUploa
                     is Resource.Success -> {
                         Timber.tag("hakz.feedviewmodel").d("success")
                         findNavController().popBackStack()
+                    }
+                }
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.isPhotoSelected.collectLatest {
+                when (it) {
+                    true -> {
+                        binding.ivTweetPhoto.visibility = View.VISIBLE
+                        binding.ivClose.visibility = View.VISIBLE
+                        binding.ivGallery.visibility = View.GONE
+                        binding.ivCamera.visibility = View.GONE
+                    }
+
+                    false -> {
+                        photoUri = null
+                        binding.ivTweetPhoto.setImageDrawable(null)
+                        binding.ivTweetPhoto.visibility = View.GONE
+                        binding.ivClose.visibility = View.GONE
+                        binding.ivGallery.visibility = View.VISIBLE
+                        binding.ivCamera.visibility = View.VISIBLE
                     }
                 }
             }
@@ -74,6 +104,10 @@ class UploadFeedFragment : BaseFragment<FragmentUploadFeedBinding>(FragmentUploa
         }
         binding.tvCancel.setOnClickListener {
             findNavController().popBackStack()
+        }
+
+        binding.ivClose.setOnClickListener {
+            viewModel.isPhotoSelected.value = false
         }
     }
 
@@ -104,9 +138,14 @@ class UploadFeedFragment : BaseFragment<FragmentUploadFeedBinding>(FragmentUploa
         ActivityResultContracts.TakePicture()
     ) {
         if (it) {
-            Glide.with(requireContext()).load(photoUri).into(binding.ivProfile)
+            addTweetPhoto()
         }
 
+    }
+
+    private fun addTweetPhoto() {
+        viewModel.isPhotoSelected.value = true
+        Glide.with(requireContext()).load(photoUri).into(binding.ivTweetPhoto)
     }
 
     private fun takeImageFromCameraProfile() {
@@ -130,7 +169,7 @@ class UploadFeedFragment : BaseFragment<FragmentUploadFeedBinding>(FragmentUploa
     ) {
         it?.let { uri ->
             photoUri = uri
-            Glide.with(requireContext()).load(photoUri).into(binding.ivProfile)
+            addTweetPhoto()
         }
     }
 }

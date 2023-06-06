@@ -2,11 +2,11 @@ package com.htetarkarzaw.twitterlite.ui.screen.upload_feed
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseUser
 import com.htetarkarzaw.twitterlite.data.Resource
-import com.htetarkarzaw.twitterlite.domain.criteria.FeedCriteria
+import com.htetarkarzaw.twitterlite.data.firebase.criteria.FeedCriteria
 import com.htetarkarzaw.twitterlite.domain.usecase.addFeedsUsecase
-import com.htetarkarzaw.twitterlite.domain.usecase.getFeedsUsecase
-import com.htetarkarzaw.twitterlite.domain.vo.FeedVO
+import com.htetarkarzaw.twitterlite.domain.usecase.getFirebaseCurrentUserUsecase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,30 +16,22 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UploadFeedViewModel @Inject constructor(
-    private val getFeedsUsecase: getFeedsUsecase,
+    private val getCurrentUserUsecase: getFirebaseCurrentUserUsecase,
     private val addFeedsUsecase: addFeedsUsecase
 ) : ViewModel() {
 
-    private val _feeds = MutableStateFlow<Resource<List<FeedVO>>>(Resource.Nothing())
-    val feeds: StateFlow<Resource<List<FeedVO>>> = _feeds
+    val isPhotoSelected = MutableStateFlow(false)
+    val currentUser: FirebaseUser?
+        get() = getCurrentUserUsecase()
 
     private val _addFeed = MutableStateFlow<Resource<String>>(Resource.Nothing())
     val addFeed: StateFlow<Resource<String>> = _addFeed
 
     fun addFeed(feedCriteria: FeedCriteria) {
+        _addFeed.value = Resource.Loading()
         viewModelScope.launch {
             addFeedsUsecase(feedCriteria).collectLatest {
                 _addFeed.value = it
-            }
-        }
-    }
-
-    private fun getFeeds() {
-        _feeds.value = Resource.Loading()
-        viewModelScope.launch {
-            getFeedsUsecase().collectLatest {
-
-                _feeds.value = it
             }
         }
     }

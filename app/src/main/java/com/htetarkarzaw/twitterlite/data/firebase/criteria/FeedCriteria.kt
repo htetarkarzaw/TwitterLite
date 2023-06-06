@@ -1,4 +1,4 @@
-package com.htetarkarzaw.twitterlite.domain.criteria
+package com.htetarkarzaw.twitterlite.data.firebase.criteria
 
 import android.net.Uri
 import java.io.Serializable
