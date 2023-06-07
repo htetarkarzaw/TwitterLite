@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import com.htetarkarzaw.twitterlite.data.Resource
 import com.htetarkarzaw.twitterlite.domain.usecase.getFirebaseCurrentUserUsecase
-import com.htetarkarzaw.twitterlite.domain.usecase.logoutUsecase
 import com.htetarkarzaw.twitterlite.domain.usecase.updateUserUsecase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,7 +18,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditProfileViewModel @Inject constructor(
-    private val logoutUsecase: logoutUsecase,
     private val getCurrentUserUsecase: getFirebaseCurrentUserUsecase,
     private val updateUserUsecase: updateUserUsecase
 ) : ViewModel() {

@@ -4,11 +4,11 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
 import com.htetarkarzaw.twitterlite.R
 import com.htetarkarzaw.twitterlite.data.Resource
 import com.htetarkarzaw.twitterlite.databinding.FragmentRegisterBinding
 import com.htetarkarzaw.twitterlite.ui.base.BaseFragment
+import com.htetarkarzaw.twitterlite.utils.InputCheckerUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -23,7 +23,9 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
                 hideLoadingDialog()
                 when (it) {
                     is Resource.Error -> {
-                        Toast.makeText(requireContext(), "Authentication failed! $it", Toast.LENGTH_LONG).show()
+                        errorDialog.setUpDialog("Authentication failed! $it",false){
+                            errorDialog.dismiss()
+                        }
                     }
 
                     is Resource.Loading -> {
@@ -44,9 +46,38 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding>(FragmentRegisterB
     override fun initUi() {
         binding.btnRegister.setOnClickListener {
             hideSoftKeyboard()
-            val email = binding.etEmail.text.toString()
-            val password = binding.etPassword.text.toString()
-            val displayName = binding.etDisplayName.text.toString()
+            val email = binding.etEmail.text.toString().trim()
+            val password = binding.etPassword.text.toString().trim()
+            val confirmPassword = binding.etConfirmPassword.text.toString().trim()
+            val displayName = binding.etDisplayName.text.toString().trim()
+            if (InputCheckerUtil.validateEmailAddress(email)) {
+                binding.tilEmail.error = null
+            } else {
+                binding.tilEmail.error = "Please enter valid email!"
+                return@setOnClickListener
+            }
+
+            if (displayName.isNotEmpty()) {
+                binding.tilDisplayName.error = null
+            } else {
+                binding.tilDisplayName.error = "Please enter display name!"
+                return@setOnClickListener
+            }
+
+            if (InputCheckerUtil.validatePassword(password)) {
+                binding.tilPassword.error = null
+            } else {
+                binding.tilPassword.error = "Please enter at least 8!"
+                return@setOnClickListener
+            }
+
+            if (InputCheckerUtil.isSamePassword(password,confirmPassword)) {
+                binding.tilConfirmPassword.error = null
+            } else {
+                binding.tilConfirmPassword.error = "Confirm password and password must be the same!"
+                return@setOnClickListener
+            }
+
             viewModel.registerWithEmailAndPassword(displayName, email, password)
         }
     }

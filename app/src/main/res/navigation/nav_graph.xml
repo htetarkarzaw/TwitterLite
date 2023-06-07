@@ -34,11 +34,11 @@
             app:popUpTo="@id/nav_graph"
             app:popUpToInclusive="true" />
         <action
-            android:id="@+id/action_settingFragment_to_editProfileFragment"
-            app:destination="@id/editProfileFragment" />
-        <action
             android:id="@+id/action_settingFragment_to_uploadFeedFragment"
             app:destination="@id/uploadFeedFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_viewProfileFragment"
+            app:destination="@id/viewProfileFragment" />
     </fragment>
 
     <fragment
@@ -69,9 +69,7 @@
             app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
-            app:destination="@id/registerFragment"
-            app:popUpTo="@id/nav_graph"
-            app:popUpToInclusive="true" />
+            app:destination="@id/registerFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -113,6 +111,22 @@
         <argument
             android:name="feedVO"
             app:argType="com.htetarkarzaw.twitterlite.data.firebase.vo.FeedVO" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewProfileFragment"
+        android:name="com.htetarkarzaw.twitterlite.ui.screen.setting.view_profile.ViewProfileFragment"
+        android:label="ViewProfileFragment"
+        tools:layout="@layout/fragment_view_profile">
+        <action
+            android:id="@+id/action_viewProfileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_viewProfileFragment_to_feedDetailFragment"
+            app:destination="@id/feedDetailFragment">
+            <argument
+                android:name="feedVO"
+                app:argType="com.htetarkarzaw.twitterlite.data.firebase.vo.FeedVO" />
+        </action>
     </fragment>
 
 </navigation>

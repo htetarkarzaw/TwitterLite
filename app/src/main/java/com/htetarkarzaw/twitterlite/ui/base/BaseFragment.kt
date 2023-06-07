@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import com.htetarkarzaw.twitterlite.ui.component.ErrorDialog
 import com.htetarkarzaw.twitterlite.utils.InflateFragment
 import com.htetarkarzaw.twitterlite.ui.component.LoadingDialog
 
@@ -15,6 +16,7 @@ import com.htetarkarzaw.twitterlite.ui.component.LoadingDialog
 abstract class BaseFragment<VB : ViewBinding>(private val inflate: InflateFragment<VB>) :
     Fragment() {
     private val loadingDialog: LoadingDialog by lazy { LoadingDialog(requireContext()) }
+    val errorDialog: ErrorDialog by lazy { ErrorDialog(requireContext()) }
     private var _binding: VB? = null
     val binding get() = _binding!!
     abstract fun observe()

@@ -16,17 +16,20 @@ interface FeedDao {
     @Query("SELECT * FROM ${Constants.TWITTER_LITE_TABLE_NAME}")
     fun retrievesFeeds(): List<Feed>
 
-    @Query("SELECT * FROM ${Constants.TWITTER_LITE_TABLE_NAME} WHERE id == :id")
-    suspend fun getFeedById(id: String): Feed?
+    @Query("SELECT * FROM ${Constants.TWITTER_LITE_TABLE_NAME} WHERE userId == :id")
+    fun retrieveFeedsByUserId(id: String): Flow<List<Feed>>
 
     @Query("SELECT * FROM ${Constants.TWITTER_LITE_TABLE_NAME} WHERE id == :id")
     fun getFeedByIdViaFlow(id: String): Flow<Feed>
 
     @Delete
-    fun deleteFeed(feed: Feed)
+    suspend fun deleteFeed(feed: Feed)
 
     @Delete
-    fun deleteFeeds(list: List<Feed>)
+    suspend fun deleteFeeds(list: List<Feed>)
+
+    @Query("DELETE FROM ${Constants.TWITTER_LITE_TABLE_NAME}")
+    suspend fun deleteAllFeeds()
 
     @Update
     suspend fun updateFeed(feed: Feed): Int

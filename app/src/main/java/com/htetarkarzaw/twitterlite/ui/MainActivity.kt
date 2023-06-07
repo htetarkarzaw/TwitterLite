@@ -17,23 +17,31 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     private lateinit var navController: NavController
     private val listener = NavController.OnDestinationChangedListener { controller, destination, arguments ->
         when (destination.id) {
-            R.id.feedFragment, R.id.settingFragment -> shouldShowBottomNavigation(
-                true
-            )
-
+            R.id.feedFragment -> {
+                navController.graph.setStartDestination(destination.id)
+                shouldShowBottomNavigation(
+                    true
+                )
+            }
+            R.id.settingFragment->{
+                shouldShowBottomNavigation(
+                    true
+                )
+            }
             else -> shouldShowBottomNavigation(false)
         }
-        Timber.tag("hakz.navigation").d("Controller->$controller/Destination->$destination/Argument->$arguments",)
+        Timber.tag("hakz.navigation").d("Controller->$controller/Destination->$destination/Argument->$arguments")
     }
 
     override fun initUi() {
         setUpNavigation()
         binding.fab.setOnClickListener {
-            when(navController.currentDestination?.id){
-                R.id.feedFragment->{
+            when (navController.currentDestination?.id) {
+                R.id.feedFragment -> {
                     navController.navigate(R.id.action_feedFragment_to_uploadFeedFragment)
                 }
-                R.id.settingFragment->{
+
+                R.id.settingFragment -> {
                     navController.navigate(R.id.action_settingFragment_to_uploadFeedFragment)
                 }
             }

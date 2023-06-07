@@ -12,6 +12,7 @@ import com.htetarkarzaw.twitterlite.data.firebase.vo.FeedVO
 import com.htetarkarzaw.twitterlite.data.firebase.vo.FeedVO.Companion.toFeedVO
 import com.htetarkarzaw.twitterlite.data.local.TwitterLiteDatabase
 import com.htetarkarzaw.twitterlite.data.local.entity.Feed
+import com.htetarkarzaw.twitterlite.utils.Constants.COLLECTION_FEED
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -32,7 +33,7 @@ class FeedRepositoryImpl @Inject constructor(
 
     override fun getFeeds(): Flow<Resource<String>> = flow {
         try {
-            val feeds = firestore.collection("feeds").get().await()
+            val feeds = firestore.collection(COLLECTION_FEED).get().await()
             val feedList = arrayListOf<Feed>()
             Timber.tag("hakz.feed").d("${feeds.documents.count()}")
             for (feed in feeds) {
@@ -50,12 +51,12 @@ class FeedRepositoryImpl @Inject constructor(
     override fun addFeed(feedCriteria: FeedCriteria): Flow<Resource<String>> = flow {
         try {
             var photoUri: Uri? = null
+            val document = firestore.collection(COLLECTION_FEED).document()
             if (feedCriteria.photoUri != null) {
-                val fileRef = storageRef.child("user/${currentUser!!.uid}/profile.jpg")
+                val fileRef = storageRef.child("feed/${document.id}/profile.jpg")
                 fileRef.putFile(feedCriteria.photoUri).await()
                 photoUri = fileRef.downloadUrl.await()
             }
-            val document = firestore.collection("feeds").document()
             val feedVO = FeedVO(
                 id = document.id,
                 tweet = feedCriteria.tweet,
@@ -74,7 +75,7 @@ class FeedRepositoryImpl @Inject constructor(
 
     override fun deleteFeed(feedVO: FeedVO): Flow<Resource<String>> = flow {
         try {
-            firestore.collection("feeds").document(feedVO.id).delete().await()
+            firestore.collection(COLLECTION_FEED).document(feedVO.id).delete().await()
             emit(Resource.Success("Successfully Deleted."))
             deleteFeedFromDb(feedVO)
         } catch (e: Exception) {
@@ -99,12 +100,16 @@ class FeedRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun retrieveFeeds(): Flow<List<Feed>> {
+    override suspend fun retrieveFeeds(): Flow<List<Feed>> {
         return dao.retrievesFeedsViaFlow()
     }
 
-    override fun getFeedById(feedId: String): Flow<Feed> {
-        return dao.getFeedByIdViaFlow(feedId)
+    override suspend fun retrieveFeedsById(userId: String): Flow<List<Feed>> {
+        return dao.retrieveFeedsByUserId(userId)
+    }
+
+    override suspend fun deleteAllFeeds() {
+        return dao.deleteAllFeeds()
     }
 
 }

@@ -17,6 +17,7 @@ import timber.log.Timber
 class FeedFragment : BaseFragment<FragmentFeedBinding>(FragmentFeedBinding::inflate) {
 
     private val viewModel: FeedViewModel by viewModels()
+    private var feedCount = 0
     private val feedAdapter by lazy {
         FeedAdapter { clickDetail(it) }
     }
@@ -28,10 +29,14 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(FragmentFeedBinding::infl
                 feedList.let {
                     if (it.isNotEmpty()) {
                         feedAdapter.submitList(it)
+                        if (feedCount < it.size) {
+                            binding.rvFeed.smoothScrollToPosition(0)
+                        }
                         binding.tvNoData.visibility = View.GONE
                     } else {
                         binding.tvNoData.visibility = View.VISIBLE
                     }
+                    feedCount = it.size
                 }
             }
         }

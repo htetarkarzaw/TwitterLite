@@ -20,7 +20,8 @@
         android:layout_height="50dp"
         android:src="@drawable/twitter"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/tvTwitter"
@@ -28,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:fontFamily="@font/picobla"
-        android:text="Twitter"
+        android:text="@string/tweet"
         android:textColor="@color/colorPrimary"
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="@id/imgLogo"
@@ -41,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/picobla"
-        android:text="Lite"
+        android:text="@string/lite"
         android:textColor="@color/colorSecondary"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="@id/tvTwitter"
@@ -58,7 +59,7 @@
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email" />
+            android:hint="@string/email" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -73,15 +74,17 @@
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password" />
+            android:hint="@string/password"
+            android:maxLength="20" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Login"
+        android:background="@drawable/button_primary_rounded"
+        android:text="@string/login"
         android:textAllCaps="false"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
@@ -89,19 +92,16 @@
         app:layout_constraintTop_toBottomOf="@id/tilPassword" />
 
 
-    <TextView
-        android:id="@+id/tvRegister"
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackground"
-        android:text="Register"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/button_white_rounded"
+        android:text="@string/register"
+        android:textAllCaps="false"
         android:textColor="@color/colorPrimary"
-        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnLogin"
-        tools:ignore="TouchTargetSizeCheck" />
+        app:layout_constraintTop_toBottomOf="@id/btnLogin" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -21,6 +21,7 @@ class UploadFeedViewModel @Inject constructor(
 ) : ViewModel() {
 
     val isPhotoSelected = MutableStateFlow(false)
+    val canTweet = MutableStateFlow(false)
     val currentUser: FirebaseUser?
         get() = getCurrentUserUsecase()
 

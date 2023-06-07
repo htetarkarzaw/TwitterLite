@@ -3,7 +3,7 @@ package com.htetarkarzaw.twitterlite.ui.screen.setting
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.bumptech.glide.Glide
 import com.htetarkarzaw.twitterlite.R
 import com.htetarkarzaw.twitterlite.databinding.FragmentSettingBinding
 import com.htetarkarzaw.twitterlite.ui.base.BaseFragment
@@ -19,6 +19,9 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
             binding.tvName.text = viewModel.currentUser!!.displayName
             binding.tvEmail.text = viewModel.currentUser!!.email
             binding.tvPhoneNumber.text = viewModel.currentUser!!.phoneNumber
+            Glide.with(requireContext()).load(viewModel.currentUser!!.photoUrl)
+                .placeholder(R.drawable.img_profile_place_holder)
+                .into(binding.ivProfile)
         }
     }
 
@@ -30,12 +33,7 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
         }
 
         binding.cvProfile.setOnClickListener {
-            findNavController().navigate(R.id.action_settingFragment_to_editProfileFragment)
-        }
-
-        val fabButton = requireActivity().findViewById<FloatingActionButton>(R.id.fab)
-        fabButton.setOnClickListener {
-            findNavController().navigate(R.id.action_settingFragment_to_uploadFeedFragment)
+            findNavController().navigate(R.id.action_settingFragment_to_viewProfileFragment)
         }
     }
 

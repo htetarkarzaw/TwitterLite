@@ -2,7 +2,7 @@ package com.htetarkarzaw.twitterlite.ui.screen.setting.editprofile
 
 import android.Manifest
 import android.net.Uri
-import android.widget.Toast
+import android.os.Build
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.fragment.app.activityViewModels
@@ -15,6 +15,7 @@ import com.htetarkarzaw.twitterlite.data.Resource
 import com.htetarkarzaw.twitterlite.databinding.FragmentEditProfileBinding
 import com.htetarkarzaw.twitterlite.ui.base.BaseFragment
 import com.htetarkarzaw.twitterlite.utils.Constants
+import com.htetarkarzaw.twitterlite.utils.InputCheckerUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -25,25 +26,28 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>(FragmentEdi
     private val viewModel: EditProfileViewModel by activityViewModels()
     private var photoUri: Uri? = null
     override fun observe() {
+        viewModel.currentUser?.let { bindProfile(it) }
         lifecycleScope.launch {
             viewModel.updateFlow.collectLatest {
                 hideLoadingDialog()
                 when (it) {
                     is Resource.Error -> {
-                        Toast.makeText(requireContext(), "Update Fail! $it", Toast.LENGTH_LONG).show()
+                        errorDialog.setUpDialog("Update Fail! $it", true) {
+                            updateProfile()
+                            errorDialog.dismiss()
+                        }
                     }
 
                     is Resource.Loading -> {
                         showLoadingDialog("Updating...")
                     }
 
-                    is Resource.Nothing -> {
-
-                    }
+                    is Resource.Nothing -> {}
 
                     is Resource.Success -> {
                         photoUri = null
                         viewModel.currentUser?.let { it1 -> bindProfile(it1) }
+                        findNavController().popBackStack()
                     }
                 }
             }
@@ -53,11 +57,19 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>(FragmentEdi
             viewModel.chooser.collectLatest {
                 when (it) {
                     Constants.TAKE_GALLERY -> {
-                        permissionTakeImageFromGallery.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            permissionTakeImageFromGallery.launch(Manifest.permission.READ_MEDIA_IMAGES)
+                        } else {
+                            permissionTakeImageFromGallery.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                        }
                     }
 
                     Constants.TAKE_PHOTO -> {
-                        permissionTakePhoto.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                            permissionTakePhoto.launch(Manifest.permission.READ_MEDIA_IMAGES)
+                        } else {
+                            permissionTakePhoto.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                        }
                     }
                 }
             }
@@ -65,7 +77,6 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>(FragmentEdi
     }
 
     override fun initUi() {
-        viewModel.currentUser?.let { bindProfile(it) }
         binding.ivProfile.setOnClickListener {
             findNavController().navigate(R.id.action_editProfileFragment_to_imageChooserBsFragment)
         }
@@ -87,6 +98,18 @@ class EditProfileFragment : BaseFragment<FragmentEditProfileBinding>(FragmentEdi
     private fun updateProfile() {
         val name = binding.etDisplayName.text.toString()
         val email = binding.etEmail.text.toString()
+        if (InputCheckerUtil.validateEmailAddress(email)) {
+            binding.tilEmail.error = null
+        } else {
+            binding.tilEmail.error = "Please enter valid email!"
+            return
+        }
+        if (name.isNotEmpty()) {
+            binding.tilDisplayName.error = null
+        } else {
+            binding.tilDisplayName.error = "Please enter display name!"
+            return
+        }
         viewModel.updateUser(name, email, uri = photoUri)
     }
 

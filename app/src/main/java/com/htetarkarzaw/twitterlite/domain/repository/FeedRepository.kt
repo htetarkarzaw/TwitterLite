@@ -12,8 +12,9 @@ interface FeedRepository {
     fun addFeed(feedCriteria: FeedCriteria): Flow<Resource<String>>
     fun deleteFeed(feedVO: FeedVO) : Flow<Resource<String>>
     suspend fun insertFeeds(feeds: List<Feed>)
-    fun retrieveFeeds(): Flow<List<Feed>>
-    fun getFeedById(feedId: String): Flow<Feed>
+    suspend fun retrieveFeeds(): Flow<List<Feed>>
+    suspend fun retrieveFeedsById(userId: String): Flow<List<Feed>>
     suspend fun deleteFeedFromDb(feedVO: FeedVO)
     val currentUser: FirebaseUser?
+    suspend fun deleteAllFeeds()
 }

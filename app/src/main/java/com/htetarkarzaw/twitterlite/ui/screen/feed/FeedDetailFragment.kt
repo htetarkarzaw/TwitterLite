@@ -42,7 +42,10 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(FragmentFeedD
                 hideLoadingDialog()
                 when (it) {
                     is Resource.Error -> {
-
+                        errorDialog.setUpDialog(it.message.toString(), true) {
+                            onDeleteConfirm()
+                            errorDialog.dismiss()
+                        }
                     }
 
                     is Resource.Loading -> {
@@ -117,12 +120,16 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(FragmentFeedD
             .placeholder(R.drawable.img_profile_place_holder)
             .into(binding.ivProfile)
         binding.tvName.text = feedVO.userName
-        binding.tvTweet.text = feedVO.tweet
+        if (feedVO.tweet.isEmpty()) {
+            binding.tvTweet.visibility = View.GONE
+        } else {
+            binding.tvTweet.visibility = View.VISIBLE
+            binding.tvTweet.text = feedVO.tweet
+        }
         if (feedVO.photoUrl != null && feedVO.photoUrl != "") {
             binding.ivTweetPhoto.visibility = View.VISIBLE
-            Glide.with(requireContext())
-                .load(feedVO.photoUrl)
-                .placeholder(R.drawable.img_profile_place_holder)
+            Glide.with(requireContext()).load(feedVO.photoUrl)
+                .placeholder(R.drawable.place_holder)
                 .into(binding.ivTweetPhoto)
         } else {
             binding.ivTweetPhoto.visibility = View.GONE

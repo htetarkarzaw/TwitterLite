@@ -5,17 +5,19 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.userProfileChangeRequest
-import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import com.htetarkarzaw.twitterlite.data.Resource
 import com.htetarkarzaw.twitterlite.data.firebase.await
+import com.htetarkarzaw.twitterlite.utils.Constants
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
-    private val storageRef: StorageReference
+    private val storageRef: StorageReference,
+    private val firestore: FirebaseFirestore
 ) : AuthRepository {
     override val currentUser: FirebaseUser?
         get() = firebaseAuth.currentUser
@@ -51,7 +53,7 @@ class AuthRepositoryImpl @Inject constructor(
             if (currentUser != null) {
                 currentUser!!.updateEmail(email).await()
                 val profileUpdates: UserProfileChangeRequest
-                if(profileUrl!=null){
+                if (profileUrl != null) {
                     val fileRef = storageRef.child("user/${currentUser!!.uid}/profile.jpg")
                     fileRef.putFile(profileUrl).await()
                     profileUrl = fileRef.downloadUrl.await()
@@ -59,12 +61,23 @@ class AuthRepositoryImpl @Inject constructor(
                         displayName = name
                         photoUri = profileUrl
                     }
-                }else{
+                } else {
                     profileUpdates = userProfileChangeRequest {
                         displayName = name
                     }
                 }
                 currentUser!!.updateProfile(profileUpdates).await()
+                val feeds = firestore.collection(Constants.COLLECTION_FEED)
+                    .whereEqualTo("userId", currentUser!!.uid)
+                    .get().await()
+                val updates = hashMapOf<String, Any>(
+                    "userName" to "${currentUser!!.displayName}",
+                    "userProfileUrl" to "${currentUser!!.photoUrl}"
+                )
+                feeds.forEach { feed ->
+                    feed.reference.update(updates).await()
+                }
+
                 emit(Resource.Success(currentUser!!))
             }
         } catch (e: Exception) {

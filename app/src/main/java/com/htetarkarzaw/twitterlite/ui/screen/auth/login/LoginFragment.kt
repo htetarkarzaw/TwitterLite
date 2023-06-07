@@ -4,36 +4,42 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import com.htetarkarzaw.twitterlite.R
 import com.htetarkarzaw.twitterlite.data.Resource
 import com.htetarkarzaw.twitterlite.databinding.FragmentLoginBinding
 import com.htetarkarzaw.twitterlite.ui.base.BaseFragment
+import com.htetarkarzaw.twitterlite.utils.InputCheckerUtil.validateEmailAddress
+import com.htetarkarzaw.twitterlite.utils.InputCheckerUtil.validatePassword
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::inflate) {
-    private val viewModel : LoginViewModel by viewModels()
-
+    private val viewModel: LoginViewModel by viewModels()
     override fun observe() {
         lifecycleScope.launch {
             viewModel.loginFlow.collectLatest {
                 hideLoadingDialog()
-                when(it){
+                when (it) {
                     is Resource.Error -> {
-                        Toast.makeText(requireContext(), "Login Fail! $it", Toast.LENGTH_LONG).show()
+                        errorDialog.setUpDialog("Login Fail! ${it.message}",false){
+                            errorDialog.dismiss()
+                        }
                     }
+
                     is Resource.Loading -> {
                         showLoadingDialog("Logging in...")
                     }
+
                     is Resource.Nothing -> {}
                     is Resource.Success -> {
                         val currentUser = it.data
-                        Toast.makeText(requireContext(), "Login Success! ${currentUser?.displayName}", Toast.LENGTH_LONG)
+                        Toast.makeText(
+                            requireContext(),
+                            "Login Success! ${currentUser?.displayName}",
+                            Toast.LENGTH_LONG
+                        )
                             .show()
                         findNavController().navigate(R.id.action_loginFragment_to_feedFragment)
                     }
@@ -46,11 +52,23 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(FragmentLoginBinding::i
         binding.btnLogin.setOnClickListener {
             val email = binding.etEmail.text.toString()
             val password = binding.etPassword.text.toString()
+            if (validateEmailAddress(email)) {
+                binding.tilEmail.error = null
+            } else {
+                binding.tilEmail.error = "Please enter valid email!"
+                return@setOnClickListener
+            }
+            if (validatePassword(password)) {
+                binding.tilPassword.error = null
+            } else {
+                binding.tilPassword.error = "Please enter at least 8!"
+                return@setOnClickListener
+            }
             hideSoftKeyboard()
-            viewModel.loginWithEmailAndPassword(email,password)
+            viewModel.loginWithEmailAndPassword(email, password)
         }
 
-        binding.tvRegister.setOnClickListener {
+        binding.btnRegister.setOnClickListener {
             findNavController().navigate(R.id.action_loginFragment_to_registerFragment)
         }
     }

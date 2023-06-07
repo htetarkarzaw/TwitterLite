@@ -2,16 +2,19 @@ package com.htetarkarzaw.twitterlite.ui.screen.upload_feed
 
 import android.Manifest
 import android.net.Uri
+import android.os.Build
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.htetarkarzaw.twitterlite.R
 import com.htetarkarzaw.twitterlite.data.Resource
-import com.htetarkarzaw.twitterlite.databinding.FragmentUploadFeedBinding
 import com.htetarkarzaw.twitterlite.data.firebase.criteria.FeedCriteria
+import com.htetarkarzaw.twitterlite.databinding.FragmentUploadFeedBinding
 import com.htetarkarzaw.twitterlite.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -50,6 +53,10 @@ class UploadFeedFragment : BaseFragment<FragmentUploadFeedBinding>(FragmentUploa
                 hideLoadingDialog()
                 when (it) {
                     is Resource.Error -> {
+                        errorDialog.setUpDialog("Update Fail! $it", true) {
+                            uploadFeed()
+                            errorDialog.dismiss()
+                        }
                         Timber.tag("hakz.feedviewmodel").d(it.message)
                     }
 
@@ -77,6 +84,8 @@ class UploadFeedFragment : BaseFragment<FragmentUploadFeedBinding>(FragmentUploa
                         binding.ivClose.visibility = View.VISIBLE
                         binding.ivGallery.visibility = View.GONE
                         binding.ivCamera.visibility = View.GONE
+                        binding.btnUpload.isClickable = true
+                        binding.btnUpload.setBackgroundResource(R.drawable.button_primary_rounded)
                     }
 
                     false -> {
@@ -86,6 +95,27 @@ class UploadFeedFragment : BaseFragment<FragmentUploadFeedBinding>(FragmentUploa
                         binding.ivClose.visibility = View.GONE
                         binding.ivGallery.visibility = View.VISIBLE
                         binding.ivCamera.visibility = View.VISIBLE
+                        if (binding.etTweet.text.toString().trim().isEmpty()) {
+                            binding.btnUpload.isClickable = false
+                            binding.btnUpload.setBackgroundResource(R.drawable.button_secondary_rounded)
+                        }
+                    }
+                }
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.canTweet.collectLatest {
+                when (it) {
+                    true -> {
+                        binding.btnUpload.isClickable = true
+                        binding.btnUpload.setBackgroundResource(R.drawable.button_primary_rounded)
+                    }
+
+                    false -> {
+                        if (photoUri == null) {
+                            binding.btnUpload.isClickable = false
+                            binding.btnUpload.setBackgroundResource(R.drawable.button_secondary_rounded)
+                        }
                     }
                 }
             }
@@ -94,10 +124,18 @@ class UploadFeedFragment : BaseFragment<FragmentUploadFeedBinding>(FragmentUploa
 
     override fun initUi() {
         binding.ivCamera.setOnClickListener {
-            permissionTakePhoto.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                permissionTakePhoto.launch(Manifest.permission.READ_MEDIA_IMAGES)
+            } else {
+                permissionTakePhoto.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            }
         }
         binding.ivGallery.setOnClickListener {
-            permissionTakeImageFromGallery.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                permissionTakeImageFromGallery.launch(Manifest.permission.READ_MEDIA_IMAGES)
+            } else {
+                permissionTakeImageFromGallery.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            }
         }
         binding.btnUpload.setOnClickListener {
             uploadFeed()
@@ -109,11 +147,15 @@ class UploadFeedFragment : BaseFragment<FragmentUploadFeedBinding>(FragmentUploa
         binding.ivClose.setOnClickListener {
             viewModel.isPhotoSelected.value = false
         }
+        binding.etTweet.addTextChangedListener { text ->
+            viewModel.canTweet.value = !text.isNullOrEmpty()
+        }
     }
 
     private fun uploadFeed() {
+        val tweet = binding.etTweet.text.toString().trim()
         val feedCriteria = FeedCriteria(
-            tweet = binding.etTweet.text.toString(),
+            tweet = tweet,
             photoUri = photoUri,
             date = System.currentTimeMillis()
         )
