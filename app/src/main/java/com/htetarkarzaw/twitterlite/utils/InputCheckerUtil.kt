@@ -2,7 +2,7 @@ package com.htetarkarzaw.twitterlite.utils
 
 object InputCheckerUtil {
     private const val PASSWORD_PATTERN = "^.{8,20}$"
-    private const val EMAIL_PATTERN = "/^[a-zA-Z0-9.!#\$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*\$/"
+    private const val EMAIL_PATTERN = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
 
     fun validatePassword(password: String): Boolean {
         return Regex(PASSWORD_PATTERN).matches(password)

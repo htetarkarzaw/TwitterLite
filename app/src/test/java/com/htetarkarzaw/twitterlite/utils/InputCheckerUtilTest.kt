@@ -37,7 +37,7 @@ class InputCheckerUtilTest {
     }
 
     @Test
-    fun `validateMail with correct format will return false`(){
-        assertFalse(InputCheckerUtil.validateEmailAddress("arkar@gmail.com"))
+    fun `validateMail with correct format will return true`(){
+        assertTrue(InputCheckerUtil.validateEmailAddress("arkarzaw412@gmail.com"))
     }
 }
