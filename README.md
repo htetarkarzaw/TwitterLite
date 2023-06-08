@@ -24,7 +24,7 @@ Tiwtter lite uses Android Official recommended architecture MVVM with the modify
 ## How to run twitter lite app in Android Studio?
 - Clone project with [this link](https://github.com/htetarkarzaw/TwitterLite.git)
 - Android studio will down necessary plugins and sync with gradle files.
-- Check out latest commit point at `dev_hakz` branch and sync project.
+- Check out latest commit point at `main` branch and sync project.
 - Make sure that you use `JavaVersion_17` for your gradle JDK.
 - After that you can run on your device or emulator.
 

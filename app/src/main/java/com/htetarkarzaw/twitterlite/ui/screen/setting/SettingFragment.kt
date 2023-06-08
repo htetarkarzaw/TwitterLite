@@ -7,13 +7,14 @@ import com.bumptech.glide.Glide
 import com.htetarkarzaw.twitterlite.R
 import com.htetarkarzaw.twitterlite.databinding.FragmentSettingBinding
 import com.htetarkarzaw.twitterlite.ui.base.BaseFragment
+import com.htetarkarzaw.twitterlite.ui.component.ConfirmDialog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBinding::inflate) {
 
     private val viewModel: SettingViewModel by viewModels()
-
+    val confirmDialog: ConfirmDialog by lazy { ConfirmDialog(requireContext()) }
     override fun observe() {
         if (viewModel.currentUser != null) {
             binding.tvName.text = viewModel.currentUser!!.displayName
@@ -27,14 +28,21 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(FragmentSettingBind
 
     override fun initUi() {
         binding.cvLogout.setOnClickListener {
-            viewModel.logout()
-            Toast.makeText(requireContext(), "Logout Success!", Toast.LENGTH_LONG).show()
-            findNavController().navigate(R.id.action_settingFragment_to_splashFragment)
+            confirmDialog.setUpDialog(
+                "Logout",
+                "You will be return to the login screen."
+            ) { onDeleteConfirm() }
         }
 
         binding.cvProfile.setOnClickListener {
             findNavController().navigate(R.id.action_settingFragment_to_viewProfileFragment)
         }
+    }
+
+    private fun onDeleteConfirm() {
+        viewModel.logout()
+        Toast.makeText(requireContext(), "Logout Success!", Toast.LENGTH_LONG).show()
+        findNavController().navigate(R.id.action_settingFragment_to_splashFragment)
     }
 
 }

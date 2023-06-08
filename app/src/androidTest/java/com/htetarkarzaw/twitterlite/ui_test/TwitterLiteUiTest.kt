@@ -53,6 +53,7 @@ class TwitterLiteUiTest {
         if (currentDestinationId == R.id.feedFragment) {
             onView(allOf(withId(R.id.settingFragment), isDescendantOfA(withId(R.id.navView)))).perform(click())
             onView(withId(R.id.cvLogout)).perform(click())
+            onView(withId(R.id.btnOkay)).perform(click())
         }
         Thread.sleep(4000L)
         onView(withId(R.id.btnRegister)).perform(click())
@@ -82,6 +83,7 @@ class TwitterLiteUiTest {
         if (currentDestinationId == R.id.feedFragment) {
             onView(allOf(withId(R.id.settingFragment), isDescendantOfA(withId(R.id.navView)))).perform(click())
             onView(withId(R.id.cvLogout)).perform(click())
+            onView(withId(R.id.btnOkay)).perform(click())
             Thread.sleep(3000L)
         }
         onView(withId(R.id.etEmail)).perform(typeText("arkarzaw412@gmail.com"))

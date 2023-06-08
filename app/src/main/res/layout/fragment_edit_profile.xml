@@ -66,6 +66,8 @@
             android:id="@+id/etDisplayName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="actionNext"
+            android:maxLength="20"
             android:hint="@string/displayname"
             android:inputType="textPersonName" />
     </com.google.android.material.textfield.TextInputLayout>
@@ -82,7 +84,9 @@
             android:id="@+id/etEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/email" />
+            android:hint="@string/email"
+            android:imeOptions="actionDone"
+            android:maxLength="30" />
     </com.google.android.material.textfield.TextInputLayout>
 
 
