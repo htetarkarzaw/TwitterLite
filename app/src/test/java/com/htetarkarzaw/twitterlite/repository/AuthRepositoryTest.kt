@@ -42,7 +42,6 @@ class AuthRepositoryTest {
     }
 
     @Test
-    fun loginWithEmailAndPassword() = runTest {
-
+    fun getFeed() = runTest {
     }
 }

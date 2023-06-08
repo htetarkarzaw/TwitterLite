@@ -104,9 +104,10 @@
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/ivTweetPhoto"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginTop="16dp"
                 android:scaleType="centerCrop"
+                app:layout_constraintDimensionRatio="H,2:1"
                 app:layout_constraintTop_toBottomOf="@id/tilTweet"
                 app:shapeAppearanceOverlay="@style/RoundedCornerImageView" />
 
@@ -114,8 +115,9 @@
                 android:id="@+id/ivClose"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_margin="8dp"
+                android:layout_margin="16dp"
                 android:src="@drawable/ic_close"
+                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="@id/ivTweetPhoto"
                 app:layout_constraintTop_toTopOf="@id/ivTweetPhoto"
                 app:tint="@color/black"

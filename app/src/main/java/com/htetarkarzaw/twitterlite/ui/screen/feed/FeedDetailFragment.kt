@@ -76,6 +76,16 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(FragmentFeedD
         binding.ivMenu.setOnClickListener {
             optionMenu.show()
         }
+        binding.ivTweetPhoto.setOnClickListener {
+            binding.ivPhotoViewer.visibility = View.VISIBLE
+            binding.ivClose.visibility = View.VISIBLE
+        }
+
+        binding.ivClose.setOnClickListener {
+            binding.ivPhotoViewer.visibility = View.GONE
+            binding.ivClose.visibility = View.GONE
+        }
+
     }
 
     @SuppressLint("RestrictedApi")
@@ -131,6 +141,10 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(FragmentFeedD
             Glide.with(requireContext()).load(feedVO.photoUrl)
                 .placeholder(R.drawable.place_holder)
                 .into(binding.ivTweetPhoto)
+            Glide.with(requireContext())
+                .load(feedVO.photoUrl)
+                .placeholder(R.drawable.img_profile_place_holder)
+                .into(binding.ivPhotoViewer)
         } else {
             binding.ivTweetPhoto.visibility = View.GONE
         }
