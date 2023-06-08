@@ -22,5 +22,7 @@
     <string name="something_went_wrong">Something went wrong!</string>
     <string name="phone_number">Phone Number</string>
     <string name="logout">Logout</string>
+    <string name="there_is_no_feed_to_show">There is no Feed to show!</string>
+    <string name="you_have_no_tweet_yet">You have no tweet yet!</string>
 
 </resources>

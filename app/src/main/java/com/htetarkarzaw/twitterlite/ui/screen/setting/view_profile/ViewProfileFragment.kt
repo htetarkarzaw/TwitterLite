@@ -1,5 +1,6 @@
 package com.htetarkarzaw.twitterlite.ui.screen.setting.view_profile
 
+import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -33,7 +34,10 @@ class ViewProfileFragment : BaseFragment<FragmentViewProfileBinding>(FragmentVie
             viewModel.feeds.collectLatest { feedList ->
                 feedList.let {
                     if (it.isNotEmpty()) {
+                        binding.tvNoData.visibility = View.GONE
                         feedAdapter.submitList(it)
+                    } else {
+                        binding.tvNoData.visibility = View.VISIBLE
                     }
                 }
             }

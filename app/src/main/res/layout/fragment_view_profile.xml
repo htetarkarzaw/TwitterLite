@@ -79,6 +79,17 @@
                 android:background="@color/colorSecondary"
                 app:layout_constraintTop_toBottomOf="@id/tvEmail" />
 
+            <TextView
+                android:id="@+id/tvNoData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/you_have_no_tweet_yet"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/spacer"/>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvFeed"
                 android:layout_width="match_parent"
