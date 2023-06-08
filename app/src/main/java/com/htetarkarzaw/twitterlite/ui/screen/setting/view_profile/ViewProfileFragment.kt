@@ -1,6 +1,6 @@
 package com.htetarkarzaw.twitterlite.ui.screen.setting.view_profile
 
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ViewProfileFragment : BaseFragment<FragmentViewProfileBinding>(FragmentViewProfileBinding::inflate) {
-    private val viewModel: ViewProfileViewModel by activityViewModels()
+    private val viewModel: ViewProfileViewModel by viewModels()
     private val feedAdapter by lazy {
         FeedAdapter { clickDetail(it) }
     }

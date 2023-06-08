@@ -6,9 +6,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class retrieveFeedsUsecase @Inject constructor(private val repo: FeedRepository) {
-    suspend operator fun invoke(): Flow<List<FeedVO>> {
-        return repo.retrieveFeeds().map { list ->
+class RetrieveFeedsByUserIdUsecase @Inject constructor(private val repo: FeedRepository) {
+    suspend operator fun invoke(userId: String): Flow<List<FeedVO>> {
+        return repo.retrieveFeedsById(userId).map { list ->
             list.map { it.toVO() }.sortedByDescending { it.date }
         }
     }

@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.htetarkarzaw.twitterlite.data.Resource
 import com.htetarkarzaw.twitterlite.data.firebase.vo.FeedVO
-import com.htetarkarzaw.twitterlite.domain.usecase.getFeedsUsecase
-import com.htetarkarzaw.twitterlite.domain.usecase.retrieveFeedsUsecase
+import com.htetarkarzaw.twitterlite.domain.usecase.GetFeedsUsecase
+import com.htetarkarzaw.twitterlite.domain.usecase.RetrieveFeedsUsecase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,8 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FeedViewModel @Inject constructor(
-    private val getFeedsUsecase: getFeedsUsecase,
-    private val retrieveFeedsUsecase: retrieveFeedsUsecase
+    private val getFeedsUsecase: GetFeedsUsecase,
+    private val retrieveFeedsUsecase: RetrieveFeedsUsecase
 ) : ViewModel() {
 
     private val _feeds = MutableStateFlow<Resource<String>>(Resource.Nothing())

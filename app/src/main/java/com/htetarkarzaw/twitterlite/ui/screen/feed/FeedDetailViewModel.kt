@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import com.htetarkarzaw.twitterlite.data.Resource
 import com.htetarkarzaw.twitterlite.data.firebase.vo.FeedVO
-import com.htetarkarzaw.twitterlite.domain.usecase.deleteFeedsUsecase
-import com.htetarkarzaw.twitterlite.domain.usecase.getFirebaseCurrentUserUsecase
+import com.htetarkarzaw.twitterlite.domain.usecase.DeleteFeedsUsecase
+import com.htetarkarzaw.twitterlite.domain.usecase.GetFirebaseCurrentUserUsecase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -15,8 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FeedDetailViewModel @Inject constructor(
-    private val deleteFeedsUsecase: deleteFeedsUsecase,
-    private val getCurrentUserUsecase: getFirebaseCurrentUserUsecase
+    private val deleteFeedsUsecase: DeleteFeedsUsecase,
+    private val getCurrentUserUsecase: GetFirebaseCurrentUserUsecase
 ) : ViewModel() {
 
     private val _deleteFeed = MutableStateFlow<Resource<String>>(Resource.Nothing())

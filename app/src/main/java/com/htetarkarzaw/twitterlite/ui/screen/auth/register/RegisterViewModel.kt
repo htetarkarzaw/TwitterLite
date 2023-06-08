@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import com.htetarkarzaw.twitterlite.data.Resource
-import com.htetarkarzaw.twitterlite.domain.usecase.registerWithEmailAndPasswordUsecase
+import com.htetarkarzaw.twitterlite.domain.usecase.RegisterWithEmailAndPasswordUsecase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RegisterViewModel @Inject constructor(private val registerWithEmailAndPasswordUsecase: registerWithEmailAndPasswordUsecase) :
+class RegisterViewModel @Inject constructor(private val registerWithEmailAndPasswordUsecase: RegisterWithEmailAndPasswordUsecase) :
     ViewModel() {
     private val _registerFlow = MutableStateFlow<Resource<FirebaseUser>>(Resource.Nothing())
     val registerFlow: StateFlow<Resource<FirebaseUser>> = _registerFlow

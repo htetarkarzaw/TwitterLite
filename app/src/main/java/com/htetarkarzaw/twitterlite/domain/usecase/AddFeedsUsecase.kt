@@ -6,8 +6,8 @@ import com.htetarkarzaw.twitterlite.domain.repository.FeedRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class addFeedsUsecase @Inject constructor(private val repo: FeedRepository) {
-    suspend operator fun invoke(feedCriteria: FeedCriteria): Flow<Resource<String>> {
+class AddFeedsUsecase @Inject constructor(private val repo: FeedRepository) {
+    operator fun invoke(feedCriteria: FeedCriteria): Flow<Resource<String>> {
         return repo.addFeed(feedCriteria)
     }
 }
