@@ -17,6 +17,7 @@
     <color name="colorPrimaryTrans">#649c27b0</color>
 
     <color name="transparent">#00000000</color>
+    <color name="blackTransparent">#DC000000</color>
 
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
@@ -25,4 +26,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="text_red">#E62048</color>
+
+    <color name="background">#F2F2F2</color>
 </resources>

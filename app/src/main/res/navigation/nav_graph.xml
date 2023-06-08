@@ -2,19 +2,131 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/feedFragment">
+    android:id="@+id/nav_graph"
+    app:startDestination="@+id/splashFragment">
+
 
     <fragment
         android:id="@+id/feedFragment"
-        android:name="com.htetarkarzaw.twitterlite.ui.feed.FeedFragment"
+        android:name="com.htetarkarzaw.twitterlite.ui.screen.feed.FeedFragment"
         android:label="@string/title_feed"
-        tools:layout="@layout/fragment_feed" />
+        tools:layout="@layout/fragment_feed">
+        <action
+            android:id="@+id/action_feedFragment_to_uploadFeedFragment"
+            app:destination="@id/uploadFeedFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_feedDetailFragment"
+            app:destination="@id/feedDetailFragment">
+            <argument
+                android:name="feedVO"
+                app:argType="com.htetarkarzaw.twitterlite.data.firebase.vo.FeedVO" />
+        </action>
+    </fragment>
 
     <fragment
         android:id="@+id/settingFragment"
-        android:name="com.htetarkarzaw.twitterlite.ui.dashboard.SettingFragment"
+        android:name="com.htetarkarzaw.twitterlite.ui.screen.setting.SettingFragment"
         android:label="@string/title_setting"
-        tools:layout="@layout/fragment_setting" />
+        tools:layout="@layout/fragment_setting">
+        <action
+            android:id="@+id/action_settingFragment_to_splashFragment"
+            app:destination="@id/splashFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_settingFragment_to_uploadFeedFragment"
+            app:destination="@id/uploadFeedFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_viewProfileFragment"
+            app:destination="@id/viewProfileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.htetarkarzaw.twitterlite.ui.screen.auth.splash.SplashFragment"
+        android:label="SplashFragment"
+        tools:layout="@layout/fragment_splash">
+        <action
+            android:id="@+id/action_splashFragment_to_feedFragment"
+            app:destination="@id/feedFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_splashFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.htetarkarzaw.twitterlite.ui.screen.auth.login.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_feedFragment"
+            app:destination="@id/feedFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.htetarkarzaw.twitterlite.ui.screen.auth.register.RegisterFragment"
+        android:label="RegisterFragment"
+        tools:layout="@layout/fragment_register">
+        <action
+            android:id="@+id/action_registerFragment_to_feedFragment"
+            app:destination="@id/feedFragment"
+            app:popUpTo="@id/nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="com.htetarkarzaw.twitterlite.ui.screen.setting.editprofile.EditProfileFragment"
+        android:label="EditProfileFragment"
+        tools:layout="@layout/fragment_edit_profile">
+        <action
+            android:id="@+id/action_editProfileFragment_to_imageChooserBsFragment"
+            app:destination="@id/imageChooserBsFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/imageChooserBsFragment"
+        android:name="com.htetarkarzaw.twitterlite.ui.screen.setting.editprofile.ImageChooserBsFragment"
+        android:label="ImageChooserBsFragment"
+        tools:layout="@layout/fragment_bs_image_chooser" />
+
+    <fragment
+        android:id="@+id/uploadFeedFragment"
+        android:name="com.htetarkarzaw.twitterlite.ui.screen.upload_feed.UploadFeedFragment"
+        android:label="UploadFeedFragment"
+        tools:layout="@layout/fragment_upload_feed" />
+
+    <fragment
+        android:id="@+id/feedDetailFragment"
+        android:name="com.htetarkarzaw.twitterlite.ui.screen.feed.FeedDetailFragment"
+        android:label="FeedDetailFragment"
+        tools:layout="@layout/fragment_feed_detail">
+        <argument
+            android:name="feedVO"
+            app:argType="com.htetarkarzaw.twitterlite.data.firebase.vo.FeedVO" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewProfileFragment"
+        android:name="com.htetarkarzaw.twitterlite.ui.screen.setting.view_profile.ViewProfileFragment"
+        android:label="ViewProfileFragment"
+        tools:layout="@layout/fragment_view_profile">
+        <action
+            android:id="@+id/action_viewProfileFragment_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_viewProfileFragment_to_feedDetailFragment"
+            app:destination="@id/feedDetailFragment">
+            <argument
+                android:name="feedVO"
+                app:argType="com.htetarkarzaw.twitterlite.data.firebase.vo.FeedVO" />
+        </action>
+    </fragment>
 
 </navigation>

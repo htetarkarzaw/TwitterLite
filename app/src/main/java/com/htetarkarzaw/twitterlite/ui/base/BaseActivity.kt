@@ -3,7 +3,7 @@ package com.htetarkarzaw.twitterlite.ui.base
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
-import com.htetarkarzaw.twitterlite.InflateActivity
+import com.htetarkarzaw.twitterlite.utils.InflateActivity
 
 abstract class BaseActivity<VB: ViewBinding>(private val inflate: InflateActivity<VB>) :
     AppCompatActivity() {

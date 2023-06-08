@@ -3,4 +3,26 @@
     <string name="title_feed">Feed</string>
     <string name="title_setting">Setting</string>
     <string name="content_description_fab">description fab</string>
+    <string name="cancel">Cancel</string>
+    <string name="tweet">Tweet</string>
+    <string name="what_s_happening">What\'s happening?</string>
+    <string name="twitter">Twitter</string>
+    <string name="lite">Lite</string>
+    <string name="email">Email</string>
+    <string name="displayname">DisplayName</string>
+    <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="login">Login</string>
+
+    <string name="retry">Retry</string>
+    <string name="okay">Okay</string>
+    <string name="save">Save</string>
+    <string name="edit">edit</string>
+    <string name="something_went_wrong">Something went wrong!</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="logout">Logout</string>
+    <string name="there_is_no_feed_to_show">There is no Feed to show!</string>
+    <string name="you_have_no_tweet_yet">You have no tweet yet!</string>
+
 </resources>
